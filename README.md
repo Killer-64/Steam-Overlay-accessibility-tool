@@ -84,6 +84,23 @@ Ręczne uruchomienie z podglądem: `python soa_daemon.py -v`.
 | Tab w polu edycji | wyjdź z pola |
 | Shift+Tab, Escape | zamknij nakładkę (to robi sam Steam) |
 
+### Tryb Big Picture
+
+W trybie Big Picture nakładka to interfejs Steama dla kontrolera (menu główne
+i menu szybkiego dostępu). Tam nawigacją zajmuje się sam Steam – strzałkami
+albo kontrolerem – a mod tylko wypowiada element, który dostał fokus, oraz
+zmiany jego stanu (przełącznik, suwak).
+
+| Klawisz | Działanie |
+| --- | --- |
+| Strzałki / kontroler | poruszanie się (robi to Steam) |
+| Enter / przycisk A | aktywuj |
+| Escape / przycisk B | wstecz |
+| F1 | pomoc |
+| F2 | gdzie jestem |
+| F3 | czytaj od bieżącego miejsca |
+| Ctrl | przerwij mowę |
+
 Dodatkowo czytane są: dymki powiadomień Steama (w grze i na pulpicie),
 nowe wiadomości czatu przy otwartej nakładce oraz wpisywane znaki.
 
@@ -125,4 +142,4 @@ i dołącza je do wydania.
 - Port debugowania słucha tylko na localhost, ale każdy lokalny program może
   przez niego sterować Steamem.
 - Aktualizacje Steama mogą zmienić wewnętrzne nazwy, z których mod korzysta
-  (`g_PopupManager`, klasy ikon). Sama nawigacja po DOM jest od nich niezależna.
+  (`g_PopupManager`, `FocusNavController`, klasy ikon). Sama nawigacja po DOM jest od nich niezależna.
