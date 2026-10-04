@@ -1,0 +1,51 @@
+# Builds the single-file program for Windows and Linux and attaches both files
+# to the GitHub release of the pushed tag (git tag v1.1 && git push --tags).
+name: release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # An old Ubuntu, so that the Linux build also runs on systems with an older glibc.
+        os: [ubuntu-22.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - if: runner.os == 'Windows'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # The system Python on Linux: python3-speechd exists only as a distribution package.
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-pip python3-speechd binutils
+      - run: python3 -m pip install pyinstaller websockets || python -m pip install pyinstaller websockets
+        shell: bash
+      - run: sh build.sh
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}
+          path: dist/*
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||
+            gh release create "$TAG" -R "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes
+          gh release upload "$TAG" -R "$GITHUB_REPOSITORY" --clobber dist/*

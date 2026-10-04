@@ -15,7 +15,29 @@ i Windowsie. Bez OCR: nakładka to strona WWW renderowana przez `steamwebhelper`
 - Agent dodaje wirtualny kursor i obsługę klawiatury, a teksty do wypowiedzenia
   odsyła demonowi. Proces gry nie jest w żaden sposób dotykany.
 
-## Instalacja (Linux)
+## Instalacja
+
+Pobierz jeden plik z zakładki
+[Releases](https://github.com/borys22blinddev/Steam-Overlay-accessibility-tool/releases)
+i uruchom go. Python nie jest potrzebny.
+
+- **Windows:** `steam-overlay-access.exe` – dwuklik. Windows SmartScreen może
+  ostrzec przed nieznanym wydawcą: „Więcej informacji” → „Uruchom mimo to”.
+- **Linux:** `steam-overlay-access-linux`:
+
+      chmod +x steam-overlay-access-linux && ./steam-overlay-access-linux
+
+Program kopiuje się do katalogu użytkownika, włącza port debugowania Steama,
+dopisuje się do autostartu (Windows: rejestr `HKCU\...\Run`; Linux: usługa
+użytkownika systemd, a bez systemd `~/.config/autostart`) i od razu startuje.
+Potem jednorazowo zrestartuj Steama. Pobrany plik można skasować.
+
+Aktualizacja: pobierz nowy plik i uruchom go. Usunięcie: na Windowsie uruchom
+plik ponownie i wybierz „Nie”; na Linuksie `./steam-overlay-access-linux --uninstall`.
+
+Na Linuksie do mowy potrzebny jest speech-dispatcher (ten sam, którego używa Orca).
+
+## Uruchamianie ze źródeł (Linux)
 
     ./install.sh
 
@@ -24,7 +46,7 @@ Potem jednorazowo zrestartuj Steama. Wymagane: `python3-websockets`,
 
 Ręczne uruchomienie z podglądem tego, co jest mówione: `./soa_daemon.py -v`.
 
-## Instalacja (Windows)
+## Uruchamianie ze źródeł (Windows)
 
 Wymagany Python 3 z python.org. Uruchom `install.bat` (dwuklik), potem
 jednorazowo zrestartuj Steama. Instalator sam doinstaluje moduł `websockets`,
@@ -34,7 +56,8 @@ przy każdym logowaniu. Usunięcie: `uninstall.bat`.
 Mowa:
 
 - Domyślnie SAPI 5, czyli głos ustawiony w systemie (Panel sterowania → Mowa).
-- Żeby mod mówił przez NVDA, skopiuj obok `soa_daemon.py` plik
+- Żeby mod mówił przez NVDA, skopiuj obok `soa_daemon.py` (albo obok zainstalowanego
+  `%LOCALAPPDATA%\steam-overlay-access\steam-overlay-access.exe`) plik
   `nvdaControllerClient.dll` w wersji zgodnej z Pythonem (zwykle 64-bitowej);
   jest w paczce „controller client" z nvaccess.org. Gdy NVDA nie działa, mod
   wraca do SAPI.
@@ -89,7 +112,14 @@ Opcjonalny plik `~/.config/steam-overlay-access/config.json`:
 Na Windowsie plik leży w `%APPDATA%\steam-overlay-access\config.json`, a
 ustawienia `rate`, `voice` i `language` dotyczą tylko SAPI.
 Po zmianie: `systemctl --user restart steam-overlay-access` (Linux) albo
-ponownie `install.bat` (Windows).
+ponownie uruchom instalator (Windows).
+
+## Budowanie plików do wydania
+
+`./build.sh` (wymaga `pip install pyinstaller websockets`) buduje do `dist/`
+plik dla systemu, na którym jest uruchomiony. Na GitHubie robi to
+`.github/workflows/release.yml`: wypchnięcie taga `v*` buduje oba pliki
+i dołącza je do wydania.
 
 ## Uwagi
 

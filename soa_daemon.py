@@ -119,8 +119,9 @@ class WindowsSpeaker:
 
     def _load_nvda(self):
         import ctypes
-        for name in self.NVDA_DLLS:
-            path = os.path.join(HERE, name)
+        # In the one-file build HERE is a temporary directory; the DLL lies next to the .exe.
+        dirs = (os.path.dirname(os.path.abspath(sys.executable)), HERE) if getattr(sys, 'frozen', False) else (HERE,)
+        for path in (os.path.join(d, name) for d in dirs for name in self.NVDA_DLLS):
             if not os.path.exists(path):
                 continue
             try:
