@@ -13,7 +13,6 @@ it) and restart Steam.
 import argparse
 import asyncio
 import json
-import locale
 import os
 import shutil
 import subprocess
@@ -32,7 +31,6 @@ CONFIG_PATH = os.path.join(CONFIG_HOME, 'steam-overlay-access', 'config.json')
 BINDING = '__soaBridge'
 DEFAULTS = {
     'port': 8080,
-    'lang': None,       # 'pl' / 'en'; None = from system locale
     'echo': True,       # speak typed characters in edit fields
     'toasts': True,     # speak in-game notification toasts
     'chat': True,       # speak chat messages arriving while the overlay is open
@@ -191,16 +189,6 @@ def connect_options():
     return {}
 
 
-def system_lang():
-    if WINDOWS:
-        import ctypes
-        # primary language id 0x15 = Polish
-        return 'pl' if ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3ff == 0x15 else 'en'
-    loc = (os.environ.get('LC_ALL') or os.environ.get('LC_MESSAGES') or os.environ.get('LANG')
-           or locale.getlocale()[0] or 'en')
-    return 'pl' if loc.lower().startswith('pl') else 'en'
-
-
 class Session:
     """One CDP connection to one Steam page target."""
 
@@ -262,7 +250,7 @@ class Daemon:
         self.web_remote = False  # overlay web pages forward their keys to the shared context
         self.steam_seen = None
         with open(os.path.join(HERE, 'agent.js'), encoding='utf-8') as f:
-            agent_cfg = {k: cfg[k] for k in ('lang', 'echo', 'toasts', 'chat')}
+            agent_cfg = {k: cfg[k] for k in ('echo', 'toasts', 'chat')}
             self.agent = f.read().replace('/*__SOA_CONFIG__*/{}', json.dumps(agent_cfg))
 
     def debug(self, *args):
@@ -348,17 +336,12 @@ def load_config(args):
         log('Ignoring broken config %s: %s' % (CONFIG_PATH, e))
     if args.port:
         cfg['port'] = args.port
-    if args.lang:
-        cfg['lang'] = args.lang
-    if not cfg['lang']:
-        cfg['lang'] = system_lang()
     return cfg
 
 
 def main():
     ap = argparse.ArgumentParser(description='Screen reader support for the Steam in-game overlay.')
     ap.add_argument('--port', type=int, help='CEF remote debugging port (default 8080)')
-    ap.add_argument('--lang', choices=['pl', 'en'], help="language of the mod's own messages")
     ap.add_argument('--no-speech', action='store_true', help='do not speak (for debugging with -v)')
     ap.add_argument('-v', '--verbose', action='store_true', help='log everything that is spoken')
     args = ap.parse_args()

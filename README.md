@@ -33,7 +33,7 @@ użytkownika systemd, a bez systemd `~/.config/autostart`) i od razu startuje.
 Potem jednorazowo zrestartuj Steama. Pobrany plik można skasować.
 
 Aktualizacja: pobierz nowy plik i uruchom go. Usunięcie: na Windowsie uruchom
-plik ponownie i wybierz „Nie”; na Linuksie `./steam-overlay-access-linux --uninstall`.
+plik ponownie i wybierz „No” (Nie); na Linuksie `./steam-overlay-access-linux --uninstall`.
 
 Na Linuksie do mowy potrzebny jest speech-dispatcher (ten sam, którego używa Orca).
 
@@ -96,7 +96,6 @@ treść dymka wypowiada sam mod.
 Opcjonalny plik `~/.config/steam-overlay-access/config.json`:
 
     {
-      "lang": "pl",        // język komunikatów moda: "pl" lub "en" (domyślnie z systemu)
       "echo": true,        // echo wpisywanych znaków
       "toasts": true,      // czytanie dymków powiadomień
       "chat": true,        // czytanie przychodzących wiadomości czatu

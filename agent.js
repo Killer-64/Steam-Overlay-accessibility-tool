@@ -13,47 +13,28 @@
   'use strict';
   if (window.__soa) { try { window.__soa.destroy(); } catch (e) { /* old instance gone */ } }
 
-  const CFG = Object.assign({ lang: 'en', echo: true, toasts: true, chat: true }, /*__SOA_CONFIG__*/{});
+  const CFG = Object.assign({ echo: true, toasts: true, chat: true }, /*__SOA_CONFIG__*/{});
   const SHARED = /(^|\.)steamloopback\.host$/.test(location.hostname);
   // Web pages are only ours when the in-game overlay browser shows them, never
   // the desktop client's own store/community views.
   if (!SHARED && (window.top !== window || !/GameOverlay/.test(navigator.userAgent))) return;
 
-  const STRINGS = {
-    en: {
-      opened: 'Steam overlay', closed: 'Overlay closed', window: 'window', menu: 'menu',
-      button: 'button', link: 'link', edit: 'edit', checkbox: 'checkbox', radio: 'radio button',
-      tab: 'tab', menuitem: 'menu item', slider: 'slider', combo: 'combo box', option: 'option',
-      heading: 'heading', image: 'image', password: 'password edit',
-      checked: 'checked', unchecked: 'not checked', selected: 'selected', expanded: 'expanded',
-      collapsed: 'collapsed', disabled: 'unavailable', unlabeled: 'unlabeled',
-      empty: 'No items', top: 'Top', bottom: 'Bottom', noControl: 'No more controls',
-      editing: 'Editing', blank: 'blank', space: 'space', star: 'star',
-      noHeading: 'No more headings', of: 'of', noWindow: 'No other windows', notification: 'Notification', close: 'Close',
-      search: 'Search', contextMenu: 'Context menu', web: 'web page',
-      help: 'Up and down arrows move by item. Left and right arrows or Tab move by control. ' +
-        'H and Shift H move by heading. Home and End jump to the first and last item. Enter activates. Menu key or Shift F10 opens the context menu. ' +
-        'F6 switches between overlay windows. Backspace closes the current window or menu. F2 says where you are. F3 reads from here. Control stops speech. ' +
-        'Tab leaves an edit field. Shift Tab or Escape closes the overlay.',
-    },
-    pl: {
-      opened: 'Nakładka Steam', closed: 'Nakładka zamknięta', window: 'okno', menu: 'menu',
-      button: 'przycisk', link: 'link', edit: 'pole edycji', checkbox: 'pole wyboru', radio: 'przycisk opcji',
-      tab: 'karta', menuitem: 'element menu', slider: 'suwak', combo: 'lista rozwijana', option: 'opcja',
-      heading: 'nagłówek', image: 'obraz', password: 'pole hasła',
-      checked: 'zaznaczone', unchecked: 'niezaznaczone', selected: 'wybrane', expanded: 'rozwinięte',
-      collapsed: 'zwinięte', disabled: 'niedostępne', unlabeled: 'bez etykiety',
-      empty: 'Brak elementów', top: 'Początek', bottom: 'Koniec', noControl: 'Brak dalszych kontrolek',
-      editing: 'Edycja', blank: 'puste', space: 'spacja', star: 'gwiazdka',
-      noHeading: 'Brak dalszych nagłówków', of: 'z', noWindow: 'Brak innych okien', notification: 'Powiadomienie', close: 'Zamknij',
-      search: 'Szukaj', contextMenu: 'Menu kontekstowe', web: 'strona',
-      help: 'Strzałki w górę i w dół przechodzą po elementach. Strzałki w lewo i w prawo lub Tab przechodzą po kontrolkach. ' +
-        'H i Shift H przechodzą po nagłówkach. Home i End skaczą na początek i koniec. Enter aktywuje. Klawisz menu lub Shift F10 otwiera menu kontekstowe. ' +
-        'F6 przełącza okna nakładki. Backspace zamyka bieżące okno lub menu. F2 mówi, gdzie jesteś. F3 czyta od bieżącego miejsca. Control przerywa mowę. ' +
-        'Tab wychodzi z pola edycji. Shift Tab lub Escape zamyka nakładkę.',
-    },
+  const L = {
+    opened: 'Steam overlay', closed: 'Overlay closed', window: 'window', menu: 'menu',
+    button: 'button', link: 'link', edit: 'edit', checkbox: 'checkbox', radio: 'radio button',
+    tab: 'tab', menuitem: 'menu item', slider: 'slider', combo: 'combo box', option: 'option',
+    heading: 'heading', image: 'image', password: 'password edit',
+    checked: 'checked', unchecked: 'not checked', selected: 'selected', expanded: 'expanded',
+    collapsed: 'collapsed', disabled: 'unavailable', unlabeled: 'unlabeled',
+    empty: 'No items', top: 'Top', bottom: 'Bottom', noControl: 'No more controls',
+    editing: 'Editing', blank: 'blank', space: 'space', star: 'star',
+    noHeading: 'No more headings', of: 'of', noWindow: 'No other windows', notification: 'Notification', close: 'Close',
+    search: 'Search', contextMenu: 'Context menu', web: 'web page',
+    help: 'Up and down arrows move by item. Left and right arrows or Tab move by control. ' +
+      'H and Shift H move by heading. Home and End jump to the first and last item. Enter activates. Menu key or Shift F10 opens the context menu. ' +
+      'F6 switches between overlay windows. Backspace closes the current window or menu. F2 says where you are. F3 reads from here. Control stops speech. ' +
+      'Tab leaves an edit field. Shift Tab or Escape closes the overlay.',
   };
-  const L = STRINGS[CFG.lang] || STRINGS.en;
 
   const send = (msg) => { try { window.__soaBridge && window.__soaBridge(JSON.stringify(msg)); } catch (e) { /* daemon gone */ } };
   const say = (text, interrupt = true) => { text = clean(text).replace(/\.+\. /g, '. '); if (text) send({ t: 'say', text, interrupt }); };

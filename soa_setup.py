@@ -29,27 +29,15 @@ else:
     UNIT = os.path.join(CONFIG_HOME, 'systemd', 'user', APP + '.service')
     DESKTOP = os.path.join(CONFIG_HOME, 'autostart', APP + '.desktop')
 
-TEXTS = {
-    'en': {
-        'installed': 'Installed. Restart Steam once so that it opens its debugging port. '
-                     'From now on the mod starts by itself at every logon.',
-        'removed': 'Removed. Restart Steam to close its debugging port.',
-        'no_steam': 'Steam directory not found. Install Steam (or set the STEAM_DIR environment variable) and run this again.',
-        'failed': 'Installation failed: %s',
-        'again': 'Steam Overlay Access is already installed.\n\nYes: install again (update)\nNo: uninstall\nCancel: do nothing',
-        'source': 'This installs the built program only. Build it first (see README) or use install.sh / install.bat.',
-    },
-    'pl': {
-        'installed': 'Zainstalowano. Zrestartuj Steama jeden raz, żeby otworzył port debugowania. '
-                     'Od teraz mod uruchamia się sam przy każdym logowaniu.',
-        'removed': 'Usunięto. Zrestartuj Steama, żeby zamknął port debugowania.',
-        'no_steam': 'Nie znaleziono katalogu Steama. Zainstaluj Steama (albo ustaw zmienną środowiskową STEAM_DIR) i uruchom ponownie.',
-        'failed': 'Instalacja nie powiodła się: %s',
-        'again': 'Steam Overlay Access jest już zainstalowany.\n\nTak: zainstaluj ponownie (aktualizacja)\nNie: odinstaluj\nAnuluj: nic nie rób',
-        'source': 'To instaluje tylko zbudowany program. Najpierw go zbuduj (patrz README) albo użyj install.sh / install.bat.',
-    },
+T = {
+    'installed': 'Installed. Restart Steam once so that it opens its debugging port. '
+                 'From now on the mod starts by itself at every logon.',
+    'removed': 'Removed. Restart Steam to close its debugging port.',
+    'no_steam': 'Steam directory not found. Install Steam (or set the STEAM_DIR environment variable) and run this again.',
+    'failed': 'Installation failed: %s',
+    'again': 'Steam Overlay Access is already installed.\n\nYes: install again (update)\nNo: uninstall\nCancel: do nothing',
+    'source': 'This installs the built program only. Build it first (see README) or use install.sh / install.bat.',
 }
-T = TEXTS[soa_daemon.system_lang()]
 
 
 def child_env():
