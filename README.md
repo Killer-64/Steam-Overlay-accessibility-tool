@@ -55,6 +55,10 @@ ustawionym dla jej języka (np. angielskie nazwy przycisków głosem angielskim)
 Zmiany w ustawieniach działają od razu, bez restartu. VoiceOver nie musi być
 uruchomiony.
 
+Na Macu okienka dymków na pulpicie nie są w ogóle pokazywane na ekranie:
+ich pokazanie i schowanie przełączało aktywną aplikację i wyrzucało z gry.
+Treść dymka mod wypowiada tak samo jak na innych systemach.
+
 Mac nie ma klawisza Menu: menu kontekstowe otwiera Shift+F10. Na klawiaturze
 laptopa Home / End / Page Up / Page Down to Fn + strzałki, a klawisze F1–F6
 mogą wymagać Fn, zależnie od ustawień klawiatury.

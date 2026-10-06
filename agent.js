@@ -668,11 +668,32 @@
   }
 
   // Hooked at creation time so the name is already gone when the window appears.
+  // macOS: putting a desktop toast window on screen and taking it off again
+  // makes the system switch between the user's applications, which throws
+  // them out of a game. The toast is spoken anyway, so on a Mac its window is
+  // never shown. Toasts inside a game's overlay are not system windows.
+  const KEEP_TOASTS_HIDDEN = /Mac/.test(navigator.platform);
+  function keepHidden(win) {
+    let tries = 0;
+    const patch = () => {
+      try {
+        const api = win.SteamClient && win.SteamClient.Window;
+        if (api) { api.ShowWindow = () => {}; return true; }
+      } catch (e) { return true; } // window gone
+      return ++tries > 200;
+    };
+    if (!patch()) { const timer = setInterval(() => { if (patch()) clearInterval(timer); }, 5); }
+  }
+
   const originalOpen = SHARED ? window.open : null;
   if (SHARED && CFG.toasts) {
     window.open = function (url, name) {
       const w = originalOpen.apply(this, arguments);
-      if (w && /notificationtoasts/i.test(String(name))) { S.toastViews.add(w); queueMicrotask(() => hideToastFromAT(w)); }
+      if (w && /notificationtoasts/i.test(String(name))) {
+        S.toastViews.add(w);
+        queueMicrotask(() => hideToastFromAT(w));
+        if (KEEP_TOASTS_HIDDEN && /_desktop$/.test(String(name))) keepHidden(w);
+      }
       return w;
     };
   }
