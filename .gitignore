@@ -4,3 +4,4 @@ dist/
 *.spec
 mac_speak
 .venv/
+nvdaControllerClient*.dll

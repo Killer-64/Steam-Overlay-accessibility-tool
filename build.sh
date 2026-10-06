@@ -13,7 +13,10 @@ case $(uname -s) in
     Darwin) NAME=steam-overlay-access-mac; WINDOWED=
         swiftc -O mac_speak.swift -o mac_speak
         EXTRA='--add-binary mac_speak:.' ;;
-    *) NAME=steam-overlay-access; WINDOWED=--noconsole ;;
+    *) NAME=steam-overlay-access; WINDOWED=--noconsole
+       # NVDA's controller client, matching this Python's bitness (the release workflow fetches it).
+       if [ -f nvdaControllerClient.dll ]; then EXTRA="--add-binary nvdaControllerClient.dll:."
+       else echo "Warning: nvdaControllerClient.dll not found here; this build will not speak through NVDA." >&2; fi ;;
 esac
 "$PYTHON" -m PyInstaller --noconfirm --clean --onefile $WINDOWED --name "$NAME" \
     --add-data agent.js:. --add-data sapi_speak.ps1:. $EXTRA \
